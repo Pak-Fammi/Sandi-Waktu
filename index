@@ -37,28 +37,68 @@
         <p><em>Menunggu Host memulai permainan...</em></p>
     </div>
 
-    <!-- Firebase SDK (Modular V9) -->
-    <script type="module">
-        // Impor fungsi Firebase yang dibutuhkan dari CDN
+   <script type="module">
+        // Menggunakan impor dari CDN untuk HTML biasa
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // TODO: Ganti dengan Firebase Config dari proyek Firebase kamu nanti
+        // Konfigurasi Firebase asli milikmu
         const firebaseConfig = {
-            apiKey: "API_KEY_KAMU",
-            authDomain: "PROJECT_ID.firebaseapp.com",
-            projectId: "PROJECT_ID",
-            storageBucket: "PROJECT_ID.appspot.com",
-            messagingSenderId: "SENDER_ID",
-            appId: "APP_ID"
+            apiKey: "AIzaSyDffAhILamwybmkxw_KtkN5Kn8gpNmDocA",
+            authDomain: "sandi-waktu.firebaseapp.com",
+            projectId: "sandi-waktu",
+            storageBucket: "sandi-waktu.firebasestorage.app",
+            messagingSenderId: "909497128733",
+            appId: "1:909497128733:web:55be61bfe0a3b37b39f3f4"
         };
 
-        // Inisialisasi Firebase & Firestore
+        // Inisialisasi Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Siapkan referensi elemen HTML (Tombol & Input) di sini nantinya...
-        console.log("Firebase berhasil dimuat dan siap dihubungkan!");
+        // Ambil elemen dari HTML
+        const btnCreateRoom = document.getElementById("btnCreateRoom");
+        const playerNameInput = document.getElementById("playerName");
+
+        // Logika saat tombol Buat Room diklik
+        btnCreateRoom.addEventListener("click", async () => {
+            const playerName = playerNameInput.value;
+            
+            if (!playerName) {
+                alert("Tulis namamu dulu ya sebelum membuat room!");
+                return;
+            }
+
+            // Buat kode room acak (Contoh: SANDI-X7A)
+            const randomStr = Math.random().toString(36).substring(2, 5).toUpperCase();
+            const newRoomCode = `SANDI-${randomStr}`;
+
+            try {
+                // A. Menyimpan data Room ke Firestore
+                const roomRef = doc(db, "rooms", newRoomCode);
+                await setDoc(roomRef, {
+                    status: "lobby",
+                    host: playerName,
+                    createdAt: new Date()
+                });
+
+                // B. Menyimpan pembuat room (Host) sebagai pemain pertama
+                const playerRef = doc(db, `rooms/${newRoomCode}/players`, playerName);
+                await setDoc(playerRef, {
+                    name: playerName,
+                    role: "belum_ditentukan", 
+                    isAlive: true,
+                    hasClue: false
+                });
+
+                alert(`Room berhasil dibuat! Kode kamu: ${newRoomCode}`);
+                console.log("Data berhasil dikirim. Cek Firestore kamu sekarang!");
+                
+            } catch (error) {
+                console.error("Error membuat room: ", error);
+                alert("Gagal membuat room. Silakan cek console browser (F12) untuk detailnya.");
+            }
+        });
     </script>
 </body>
 </html>
