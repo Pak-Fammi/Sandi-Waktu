@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sandi Waktu - Digital Social Deduction</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background-color: #f4f4f9; }
+        .container { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: inline-block; }
+        input, button { padding: 10px; margin: 10px 0; width: 80%; font-size: 16px; }
+        button { background-color: #2c3e50; color: white; border: none; cursor: pointer; border-radius: 5px; }
+        button:hover { background-color: #1a252f; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="menu-screen">
+        <h1>Sandi Waktu</h1>
+        <p>Temukan penyusup di ruang waktu!</p>
+        
+        <input type="text" id="playerName" placeholder="Masukkan Namamu" required>
+        <br>
+        <button id="btnCreateRoom">Buat Room Baru (Host)</button>
+        
+        <hr>
+        
+        <input type="text" id="roomCode" placeholder="Kode Room (Contoh: SANDI-123)">
+        <br>
+        <button id="btnJoinRoom">Gabung ke Room</button>
+    </div>
+
+    <div class="container hidden" id="lobby-screen">
+        <h2>Lobby: <span id="displayRoomCode"></span></h2>
+        <p>Pemain yang tergabung:</p>
+        <ul id="playerList" style="text-align: left;"></ul>
+        <p><em>Menunggu Host memulai permainan...</em></p>
+    </div>
+
+    <!-- Firebase SDK (Modular V9) -->
+    <script type="module">
+        // Impor fungsi Firebase yang dibutuhkan dari CDN
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // TODO: Ganti dengan Firebase Config dari proyek Firebase kamu nanti
+        const firebaseConfig = {
+            apiKey: "API_KEY_KAMU",
+            authDomain: "PROJECT_ID.firebaseapp.com",
+            projectId: "PROJECT_ID",
+            storageBucket: "PROJECT_ID.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
+        };
+
+        // Inisialisasi Firebase & Firestore
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Siapkan referensi elemen HTML (Tombol & Input) di sini nantinya...
+        console.log("Firebase berhasil dimuat dan siap dihubungkan!");
+    </script>
+</body>
+</html>
